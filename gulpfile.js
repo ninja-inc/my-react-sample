@@ -38,6 +38,9 @@ gulp.task('buildjs', function() {
 			    //.pipe(gulp.dest('build/javascript/'));
 })
 
+// http://yutapon.hatenablog.com/entry/2014/03/09/205231
+// http://qiita.com/cognitom/items/4c63969b5085c90639d4
+// http://qiita.com/trapple/items/8be91a346deccc31f7c5
 gulp.task('bundle', function() {
   return browserify('./react/build/app.js')
   				// bundle() works "convert node.js file to client side javascript"
