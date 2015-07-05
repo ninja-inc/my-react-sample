@@ -1,3 +1,5 @@
+console.log("app.jp -start");
+
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -24,6 +26,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/users', users);
+
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -58,3 +62,5 @@ app.use(function(err, req, res, next) {
 
 
 module.exports = app;
+
+console.log("app.jp -end");
