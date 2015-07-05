@@ -1,5 +1,10 @@
 console.log("app.jp -start");
 
+// using JSX file in ./react/src/*.jsx
+require('node-jsx').install({extension: '.jsx'})
+
+var reactAsync = require('react-async')
+
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -9,6 +14,8 @@ var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
+
+var reactApp = require('./react/src/app.jsx');
 
 var app = express();
 
@@ -24,17 +31,34 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', routes);
+//app.use('/', reactApp);  this does not work.
 app.use('/users', users);
 
-
+// render react routes on server
+app.use(function(req, res, next) {
+  if(req.query.q) {
+    res.redirect('/search/' + req.query.q)
+  }  
+  try {
+    reactAsync.renderToStringAsync(reactApp.routes({path: req.path}), function(err, markup) {
+      console.log("reactApp.routes:"+reactApp.routes);
+      console.log("req.path:"+req.path);
+      if(err) {
+        return next()
+      }
+      return res.send('<!DOCTYPE html>' + markup.replace('%react-iso-vgs%', reactApp.title.rewind()))
+    })
+  } catch(err) {
+    return next()
+  }
+})
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
-});
+//app.use(function(req, res, next) {
+//  var err = new Error('Not Found');
+//  err.status = 404;
+//  next(err);
+//});
 
 // error handlers
 
