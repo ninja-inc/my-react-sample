@@ -9,12 +9,12 @@ var browserify = require('browserify')
 var source = require('vinyl-source-stream')
 var vinylPaths = require('vinyl-paths')
 var runSequence = require('run-sequence')
-
+var reactify = require('reactify')
 
 // delete module.
 // http://whiskers.nukos.kitchen/2014/12/08/gulp-del.html
 gulp.task('cleanPublic', function() {
-  return gulp.src('public/javascripts/behavior.*js')
+  return gulp.src('public/js/*js')
   				.pipe(vinylPaths(del))
 })
 gulp.task('cleanBuild', function() {
@@ -42,18 +42,31 @@ gulp.task('buildjs', function() {
 // http://qiita.com/cognitom/items/4c63969b5085c90639d4
 // http://qiita.com/trapple/items/8be91a346deccc31f7c5
 gulp.task('bundle', function() {
-  return browserify('./react/build/app.js')
+  return browserify('./react/build/propState.js')
   				// bundle() works "convert node.js file to client side javascript"
   				.bundle()
-  				// file name
-  				.pipe(source('behavior.js'))
+  				// file name (filename is required)
+  				.pipe(source('propState.js'))
   				// save dir
   				.pipe(gulp.dest('public/js'))
 })
 
 
+//http://qiita.com/masato/items/35b0900e3a7282b33bf8
+//reactify works for *.jsx -> *.js & ServerSideJS -> ClientSideJS
+gulp.task('browserify', function(){
+  var b = browserify({
+    entries: ['./react/src/propState.jsx'],
+    transform: [reactify/*, {"es6": true}*/]
+  });
+  return b.bundle()
+    .pipe(source('propState.js'))
+    .pipe(gulp.dest('./public/js'));
+});
+
 // this module is like a main method of Java, so it is needed.
 // write TODO task names.
 gulp.task('default', function() {
-  return runSequence('cleanPublic', 'cleanBuild', 'buildjs', 'bundle')
+  //return runSequence('cleanPublic', 'cleanBuild', 'buildjs', 'bundle')
+  return runSequence('cleanPublic', 'cleanBuild', 'browserify')
 })

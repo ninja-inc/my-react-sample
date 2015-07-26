@@ -13,6 +13,7 @@
     "jade": "~1.9.2",
     "morgan": "~1.5.3",
     "serve-favicon": "~2.2.1",
+    "reactify": "^0.17.1",
 
     "fibers": "^1.0.2",
     "node-jsx": "^0.12.2",

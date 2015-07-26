@@ -1,7 +1,7 @@
 console.log("app.jp -start");
 
 // using JSX file in ./react/src/*.jsx
-require('node-jsx').install({extension: '.jsx'})
+require('node-jsx').install({extension: '.jsx', harmony: true})
 
 var reactAsync = require('react-async')
 
@@ -17,8 +17,11 @@ var users = require('./routes/users');
 
 var reactApp = require('./react/src/app.jsx');
 
+var propState = require('./react/src/propState.jsx');
+
 var app = express();
 
+var React = require('react');
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -34,7 +37,25 @@ app.use(express.static(path.join(__dirname, 'public')));
 //app.use('/', reactApp);  this does not work.
 app.use('/users', users);
 
+
+app.use('/propState', function(req, res, next) {
+  reactAsync.renderToStringAsync(propState.routes(), function(err, markup) {
+    console.log("propState.routes:"+propState.routes);
+    console.log("req.path:"+req.path);
+    if(err) {
+      return next()
+    }
+    return res.send('<!DOCTYPE html>' + markup.replace('%react-iso-vgs%', propState.title.rewind()))
+  })
+});
+
+//
+
 // render react routes on server
+/**
+* this conf despatches all path (/, /hoge/, /hoge/foo/) to app.jsx
+*/
+/*
 app.use(function(req, res, next) {
   if(req.query.q) {
     res.redirect('/search/' + req.query.q)
@@ -52,6 +73,7 @@ app.use(function(req, res, next) {
     return next()
   }
 })
+*/
 
 // catch 404 and forward to error handler
 //app.use(function(req, res, next) {
