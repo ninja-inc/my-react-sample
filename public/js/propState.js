@@ -7,25 +7,33 @@ var request = require('superagent');
 
 
 var Counter = React.createClass({displayName: "Counter",
+  propTypes: {
+    count: React.PropTypes.number
+  },
+  getDefaultProps:function() {
+    return {
+      initialCount: 0
+    };
+  },
   getInitialState:function() {
     return {
-     count: 0
+     count: this.props.initialCount
    };
   },
-  onClick:function() {
+  countUp:function() {
     this.setState({ count: this.state.count + 1});
   },
   render:function() {
     return (
       React.createElement("div", null, 
       React.createElement("span", null, this.state.count), 
-      React.createElement("button", {onClick: this.onClick}, "click")
+      React.createElement("button", {onClick: this.countUp}, "click")
       )
     );
   }
 });
 
-var TestDataURL = 'http://localhost:3000/static/mockResponse.json'
+var TestDataURL = './mockResponse.json'
 
 var User = React.createClass({displayName: "User",
   propTypes: {

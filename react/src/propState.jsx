@@ -6,25 +6,33 @@ var request = require('superagent');
 
 
 var Counter = React.createClass({
+  propTypes: {
+    count: React.PropTypes.number
+  },
+  getDefaultProps() {
+    return {
+      initialCount: 0
+    };
+  },
   getInitialState() {
     return {
-     count: 0
+     count: this.props.initialCount
    };
   },
-  onClick() {
+  countUp() {
     this.setState({ count: this.state.count + 1});
   },
   render() {
     return (
       <div>
       <span>{this.state.count}</span>
-      <button onClick={this.onClick}>click</button>
+      <button onClick={this.countUp}>click</button>
       </div>
     );
   }
 });
 
-var TestDataURL = 'http://localhost:3000/static/mockResponse.json'
+var TestDataURL = './mockResponse.json'
 
 var User = React.createClass({
   propTypes: {
