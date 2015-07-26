@@ -9,7 +9,7 @@ var browserify = require('browserify')
 var source = require('vinyl-source-stream')
 var vinylPaths = require('vinyl-paths')
 var runSequence = require('run-sequence')
-var reactify = require('reactify')
+//var reactify = require('reactify')
 
 // delete module.
 // http://whiskers.nukos.kitchen/2014/12/08/gulp-del.html
@@ -53,11 +53,12 @@ gulp.task('bundle', function() {
 
 
 //http://qiita.com/masato/items/35b0900e3a7282b33bf8
+//http://www.cultofmetatron.io/gulp-browserify-and-famo-us-for-great-justice/
 //reactify works for *.jsx -> *.js & ServerSideJS -> ClientSideJS
 gulp.task('browserify', function(){
   var b = browserify({
     entries: ['./react/src/propState.jsx'],
-    transform: [reactify/*, {"es6": true}*/]
+    transform: [["reactify", {"es6": true}]]
   });
   return b.bundle()
     .pipe(source('propState.js'))
